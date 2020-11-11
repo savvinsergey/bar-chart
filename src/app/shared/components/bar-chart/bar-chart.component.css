@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  position: relative;
+  margin: 50px;
+}
+
+.type-select {
+  position: absolute;
+  left: 50px;
+  margin-top: -5px
+}
+
+.type-select span.title {
+  color: grey;
+  font-family: "Open Sans", sans-serif;
+  padding: 5px;
+}
+.type-select select {
+  border-radius: 3px;
+  border-color: lightgrey;
+  padding: 3px;
+}
