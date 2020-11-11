@@ -106,7 +106,8 @@ export class BarChartComponent {
       .data(d => keys.map(key => ({
           key,
           value: d[key],
-          difference: Math.round((1 - d.prevValue / d.currentValue) * 100)}))
+          difference: this.calcDifferectPercent(d.currentValue, d.prevValue)
+        }))
       );
 
     this.renderRect(mainG, x1, y);
@@ -186,6 +187,12 @@ export class BarChartComponent {
 
   private getArrow(difference: number): Arrows {
     return difference > 0 ? Arrows.UP : Arrows.DOWN;
+  }
+
+  private calcDifferectPercent(currentValue: number, prevValue: number): number {
+    return currentValue > prevValue
+      ? Math.round((currentValue - prevValue) / prevValue * 100)
+      : -Math.round(100 - ((currentValue / prevValue) * 100));
   }
 
   private calculateXShift(d: {key: string, value: number}, x1: AxisScale<AxisDomain>): number {
