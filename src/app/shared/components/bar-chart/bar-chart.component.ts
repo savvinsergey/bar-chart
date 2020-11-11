@@ -9,8 +9,8 @@ export interface BarChartData {
 
 interface BarChartInnerData {
   title: string;
-  yesterday: number;
-  today: number;
+  prevValue: number;
+  currentValue: number;
 }
 
 export enum Operations {
@@ -67,7 +67,7 @@ export class BarChartComponent {
   constructor(private elementRef: ElementRef){}
 
   renderChart(): void {
-    const columns = ['title', 'yesterday', 'today'];
+    const columns = ['title', 'prevValue', 'currentValue'];
     const svg: any = d3
       .select(this.elementRef.nativeElement)
       .select('svg');
@@ -106,7 +106,7 @@ export class BarChartComponent {
       .data(d => keys.map(key => ({
           key,
           value: d[key],
-          difference: Math.round((1 - d.yesterday / d.today) * 100)}))
+          difference: Math.round((1 - d.prevValue / d.currentValue) * 100)}))
       );
 
     this.renderRect(mainG, x1, y);
@@ -152,15 +152,15 @@ export class BarChartComponent {
       .join('rect')
       .attr('x', d => x1(d.key) - this.calculateXShift(d, x1))
       .attr('y', d => y(d.value))
-      .attr('width', d => x1.bandwidth() / (d.key === 'yesterday' ? 4 : 1))
+      .attr('width', d => x1.bandwidth() / (d.key === 'prevValue' ? 4 : 1))
       .attr('height', d => y(0) - y(d.value))
-      .attr('fill', d => d.key === 'yesterday' ? Colors.GREY : this.getColor(d.difference));
+      .attr('fill', d => d.key === 'prevValue' ? Colors.GREY : this.getColor(d.difference));
   }
 
   private renderText(mainG: any, x1: AxisScale<AxisDomain>, y: AxisScale<AxisDomain>): void {
     mainG
       .join('text')
-      .text(d => d.key !== 'yesterday' && `${Math.round(d.value / 1000)}K` || null)
+      .text(d => d.key !== 'prevValue' && `${Math.round(d.value / 1000)}K` || null)
       .attr('font-size', 13)
       .attr('font-family', '"Arial", sans-serif')
       .attr('text-anchor', 'middle')
@@ -170,7 +170,7 @@ export class BarChartComponent {
 
     mainG
       .join('text')
-      .html(d => d.key !== 'yesterday' && `${d.difference > 0 && '+' || ''}${d.difference}%${this.getArrow(d.difference)}` || null)
+      .html(d => d.key !== 'prevValue' && `${d.difference > 0 && '+' || ''}${d.difference}%${this.getArrow(d.difference)}` || null)
       .style('font-weight', 700)
       .attr('font-size', 13)
       .attr('font-family', '"Arial", sans-serif')
@@ -191,10 +191,10 @@ export class BarChartComponent {
   private calculateXShift(d: {key: string, value: number}, x1: AxisScale<AxisDomain>): number {
     let shift = 0;
     switch (true) {
-      case d.key === 'today':
+      case d.key === 'currentValue':
         shift = shift = x1.bandwidth() / 2;
         break;
-      case d.key === 'yesterday':
+      case d.key === 'prevValue':
         shift = x1.bandwidth() / 4;
         shift -= shift * 2;
         break;
@@ -214,8 +214,8 @@ export class BarChartComponent {
   private convertData(value: BarChartData[]): BarChartInnerData[] {
     return value.map(item => ({
         title: item.title,
-        yesterday: item.data[0],
-        today: item.data[1],
+        prevValue: item.data[0],
+        currentValue: item.data[1],
       })
     );
   }
