@@ -2,9 +2,9 @@
   <span class="title">
     <ng-content></ng-content>
   </span>
-  <select name="operation" [(ngModel)]="operation" (ngModelChange)="renderChart()">
-    <option [ngValue]="operations.LOG">Log</option>
-    <option [ngValue]="operations.LINEAR">Linear</option>
+  <select name="operation" [(ngModel)]="type" (ngModelChange)="renderChart()">
+    <option [ngValue]="types.LOG">Log</option>
+    <option [ngValue]="types.LINEAR">Linear</option>
   </select>
 </div>
 <svg [attr.width]="width" [attr.height]="height"></svg>

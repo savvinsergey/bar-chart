@@ -13,7 +13,7 @@ interface BarChartInnerData {
   currentValue: number;
 }
 
-export enum Operations {
+export enum Types {
   LOG = 0,
   LINEAR = 1
 }
@@ -52,8 +52,8 @@ export class BarChartComponent {
   @Input()
   readonly width?: number = 700;
 
-  readonly operations: typeof Operations = Operations;
-  operation: Operations = Operations.LINEAR;
+  readonly types: typeof Types = Types;
+  type: Types = Types.LINEAR;
 
   private chartData: BarChartInnerData[] = [];
 
@@ -211,9 +211,9 @@ export class BarChartComponent {
 
   private chooseYAxisType(): any  {
     switch (true) {
-      case this.operation === Operations.LOG:
+      case this.type === Types.LOG:
         return d3.scaleSymlog();
-      case this.operation === Operations.LINEAR:
+      case this.type === Types.LINEAR:
         return d3.scaleLinear();
     }
   }
