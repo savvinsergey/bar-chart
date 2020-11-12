@@ -24,14 +24,12 @@ export class ChartsDataService {
       .pipe(
         takeWhile(() => this.userActionsData.length < 5)
       ).subscribe(() => {
-        const data = [...this.userActionsData];
         const action = this.getRandomAction();
-        if (data.find(item => item.title === action)) {
+        if (this.userActionsData.find(item => item.title === action)) {
           return;
         }
 
-        data.push(this.generateDataObj(action));
-        this.userActionsData$.next(data);
+        this.userActionsData$.next([...this.userActionsData, this.generateDataObj(action)]);
       });
   }
 
@@ -41,14 +39,12 @@ export class ChartsDataService {
         takeWhile(() => this.adminActionsData.length < 5)
       )
     .subscribe(() => {
-        const data = [...this.adminActionsData];
         const action = this.getRandomAction();
-        if (data.find(item => item.title === action)) {
+        if (this.adminActionsData.find(item => item.title === action)) {
           return;
         }
 
-        data.push(this.generateDataObj(action));
-        this.adminActionsData$.next(data);
+        this.adminActionsData$.next([...this.adminActionsData, this.generateDataObj(action)]);
       });
   }
 
